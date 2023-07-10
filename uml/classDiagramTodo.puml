@@ -1,0 +1,164 @@
+@startuml cinema
+package "model" #DDDDDD {
+    Class User {
+        private int id;
+        private String fullName;
+        private String email;
+        private String password
+        private LocalDateTime creationDateTime;
+    }
+
+     Class Task {
+         private int id;
+         private String name;
+         private String description;
+         private LocalDateTime created;
+         private LocalDateTime deadline;
+         private boolean done;
+        }
+}
+
+package "dto" #DDDDDD {
+
+}
+
+package "repository" #DDDDDD {
+ Interface UserRepository {
+         Optional<User> save(User user);
+         Optional<User> findById(int id);
+         Optional<User> findByEmailAndPassword(String email, String password);
+    }
+
+ Class HbmUserRepository implements UserRepository {
+    Optional<User> save(User user);
+    Optional<User> findById(int id);
+    Collection<User> findAll();
+    Optional<User> findByEmailAndPassword(String email, String password);
+        }
+
+ Interface TaskRepository {
+    Optional<Task> save(Task task);
+    boolean update(int id);
+    Optional<Task> findById(int id);
+    Collection<Task> findAll();
+    Collection<Task> findByStatus();
+    boolean deleteById(int id);
+        }
+
+ Class HbmTaskRepository implements TaskRepository {
+    Optional<Task> save(Task task);
+    boolean update(int id);
+    Optional<Task> findById(int id);
+    Collection<Task> findAll();
+    Collection<Task> findByStatus();
+    boolean deleteById(int id);
+   }
+}
+
+package "service" #DDDDDD {
+    Interface UserService {
+        Optional<User> save(User user);
+        Optional<User> findById(int id);
+        Optional<User> findByEmailAndPassword(String email, String password);
+        }
+
+    Class SimpleUserService implements UserService {
+        Optional<User> save(User user);
+        Optional<User> findById(int id);
+        Collection<User> findAll();
+        Optional<User> findByEmailAndPassword(String email, String password);
+            }
+
+    Interface TaskService {
+        Optional<Task> save(Task task);
+        boolean update(int id);
+        Optional<Task> findById(int id);
+        Collection<Task> findAll();
+        Collection<Task> findByStatus();
+        boolean deleteById(int id);
+                    }
+
+    Class SimpleTaskService implements TaskService {
+         Optional<Task> save(Task task);
+         boolean update(int id);
+         Optional<Task> findById(int id);
+         Collection<Task> findAll();
+         Collection<Task> findByStatus();
+         boolean deleteById(int id);
+          }
+}
+
+
+package "filter" #DDDDDD {
+    Class AuthorizationFilter {
+    }
+
+    Class SessionFilter {
+    }
+}
+
+
+package "controller" #DDDDDD {
+Class IndexController {
+   @GetMapping({"/", "/index"}) public String getIndex()
+
+}
+  note right of IndexController::getIndex
+     This method redirects to /tasks page.
+   end note
+
+    Class TaskController {
+          @RequestMapping("/tasks")
+          @GetMapping public String getAll(Model model)
+          @GetMapping("/filter") pubic String getFilter(Model model)
+          @GetMapping("/create") public String getCreationPage(Model model)
+          @PostMapping("/create") public String create(@ModelAttribute Task task, Model model)
+          @GetMapping("/{id}") public String getById(Model model, @PathVariable int id)
+          @PostMapping("/update")  public String update(@ModelAttribute Task task, Model model)
+          @GetMapping("/delete/{id}") public String delete(Model model, @PathVariable int id)
+    }
+
+    Class UserController {
+        @GetMapping("/login") public String getLoginPage()
+        @PostMapping("/login") public String loginUser(@ModelAttribute User user, Model model, HttpServletRequest request)
+        @GetMapping("/logout") public String logout(HttpSession session)
+        @GetMapping("/register") public ModelAndView getRegistrationPage()
+        @PostMapping("/register") public String register(Model model, @ModelAttribute User user)
+    }
+}
+
+
+package "templates" {
+    package "navigation" {
+        Class Navigation {
+        }
+
+        Class Footer {
+        }
+    }
+
+    package "tasks" {
+        Class taskList {
+        }
+        Class filter {
+        }
+        Class viewTask {
+        }
+        Class createTask {
+        }
+    }
+
+    package "users" {
+        Class Registration {
+        }
+
+        Class Login {
+        }
+    }
+
+    package "errors" {
+        Class 404 {
+        }
+    }
+}
+@enduml
