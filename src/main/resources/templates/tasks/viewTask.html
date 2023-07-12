@@ -16,17 +16,22 @@
     <div class="container">
         <h3>Новая задача</h3>
         <div class="row my-4">
-            <div class="col-5">
-                <form th:action="@{/tasks/createTask}" method="post">
+            <div class="col-7">
+                <form th:action="@{/tasks/updateTask}" method="post" th:object="${task}">
+                    <input type="hidden" name="id" th:field="*{id}">
+                    <input type="hidden" name="id" th:field="*{created}">
+                    <input type="hidden" name="id" th:field="*{done}">
                     <label for="taskName" class="form-label"><b>Название задачи</b></label>
-                    <input type="text" class="form-control" id="taskName" name="name" placeholder="Название задачи" required />
+                    <input type="text" class="form-control" id="taskName" name="name" th:field="*{name}" placeholder="Название задачи" required />
                     <label for="deadline" class="form-label"><b>Срок</b></label>
-                    <input type="date" class="form-control" id="deadline" name="deadline" placeholder="Срок" required>
+                    <input type="date" class="form-control" id="deadline" name="deadline" th:field="*{deadline}" placeholder="Срок" required>
                     <label for="description" class="form-label"><b>Описание задачи</b></label>
-                    <textarea type="text" class="form-control" id="description" name="description" rows="15" placeholder="Описание задачи" required></textarea>
+                    <textarea type="text" class="form-control" id="description" name="description" rows="15" th:field="*{description}" placeholder="Описание задачи" required></textarea>
                     <div class="row my-4">
-                        <div class="col-6"><button class="btn btn-primary w-100" type="submit">Добавить задачу</button></div>
-                        <div class="col-6"><a class="btn btn-danger w-100" th:href="@{/tasks/taskList}">Отмена</a></div>
+                        <div class="col-3"><button class="btn btn-primary w-100" type="submit">Обновить задачу</button></div>
+                        <div class="col-3"><a class="btn btn-success w-100" th:href="@{/tasks/markFinished/{id}(id=${task.id})}">Задача выполнена</a></div>
+                        <div class="col-3"><a class="btn btn-danger w-100" th:href="@{/tasks/deleteTask/{id}(id=${task.id})}">Удалить задачу</a></div>
+                        <div class="col-3"><a class="btn btn-secondary w-100" th:href="@{/tasks/taskList}">Отмена</a></div>
                     </div>
                 </form>
             </div>

@@ -2,13 +2,14 @@ package ru.job4j.todo.repository;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 
 import java.util.Collection;
@@ -20,19 +21,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class HbmUserRepositoryTest {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    private static SessionFactory sf;
+    private static Session session;
 
-    private UserRepository userRepository;
+    private static UserRepository userRepository;
 
-    @BeforeEach
-    public void setUp() {
-        userRepository = new HbmUserRepository(sessionFactory);
+    @BeforeAll
+    public static void setup() {
+        Configuration configuration = new Configuration()
+                .setProperty("hibernate.connection.driver_class", "org.h2.Driver")
+                .setProperty("hibernate.connection.url", "jdbc:h2:./testdb;MODE=PostgreSQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE")
+                .setProperty("hibernate.connection.username", "")
+                .setProperty("hibernate.connection.password", "")
+                .setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
+                .setProperty("hibernate.hbm2ddl.auto", "create-drop")
+                .setProperty("hibernate.show_sql", "true")
+                .addAnnotatedClass(Task.class)
+                .addAnnotatedClass(User.class);
+
+        sf = configuration.buildSessionFactory();
+        session = sf.openSession();
+        userRepository = new HbmUserRepository(sf);
     }
 
     @AfterEach
     public void tearDown() {
-        Session session = sessionFactory.openSession();
+        Session session = sf.openSession();
         session.beginTransaction();
         session.createQuery("DELETE FROM User").executeUpdate();
         session.getTransaction().commit();
@@ -40,7 +54,7 @@ class HbmUserRepositoryTest {
     }
 
     @Test
-    public void testSave() {
+    public void whenSaveThenGetSame() {
         User user = new User();
         user.setEmail("test@example.com");
         user.setPassword("password");
@@ -51,7 +65,7 @@ class HbmUserRepositoryTest {
     }
 
     @Test
-    public void testFindById() {
+    public void whenFindByIdThenSuccess() {
         User user = new User();
         user.setEmail("test@example.com");
         user.setPassword("password");
@@ -63,7 +77,7 @@ class HbmUserRepositoryTest {
     }
 
     @Test
-    public void testFindByEmailAndPassword() {
+    public void whenFindByEmailAndPasswordSuccess() {
         User user = new User();
         user.setEmail("test@example.com");
         user.setPassword("password");
@@ -102,5 +116,4 @@ class HbmUserRepositoryTest {
         Collection<User> allUsers = userRepository.findAll();
         assertThat(allUsers).hasSize(2);
     }
-
 }

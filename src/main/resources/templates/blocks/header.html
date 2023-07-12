@@ -1,10 +1,10 @@
 <div th:fragment="header">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="/">Cinema</a>
+        <a class="navbar-brand" href="/">Todo</a>
         <div class="collapse navbar-collapse">
             <div class="navbar-nav me-auto">
-                <a class="nav-item nav-link" href="/">Все задачи</a>
+                <a class="nav-item nav-link" href="/tasks">Все задачи</a>
                 <a class="nav-item nav-link" th:href="@{/tasks/createTask}">Добавить новую задачу</a>
             </div>
             <div class="d-flex" th:if="${user.fullName == 'Гость'}">
