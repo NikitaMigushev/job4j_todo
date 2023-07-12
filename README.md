@@ -21,8 +21,7 @@
 - создать базу данных 'todo' в PostgreSql
 - проверить настройки подключения к базе данных в файлах:
     - db/liquibase.properties
-    - src/main/resources/application.properties
-    - src/test/resources/connection.properties
+    - src/main/resources/hibernate.cfg.xml
 - перед запуском запустить команду liquibase:update
 - запустить метод main
 - открыть в браузере http://localhost:8080/
