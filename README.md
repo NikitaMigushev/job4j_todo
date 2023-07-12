@@ -27,13 +27,21 @@
 - открыть в браузере http://localhost:8080/
 
 ## Взаимодействие с приложением
-Авторизация
+### Авторизация
+<image src="https://github.com/NikitaMigushev/job4j_todo/blob/master/img/1.png" alt="Авторизация" />
 
-Все задачи
+### Регистрация
+<image src="https://github.com/NikitaMigushev/job4j_todo/blob/master/img/2.png" alt="Регистрация" />
 
-Фильтрация задачи
+### Все задачи
+<image src="https://github.com/NikitaMigushev/job4j_todo/blob/master/img/3.png" alt="Все задачи" />
 
-Добавление новой задачи
+### Фильтрация задачи
+<image src="https://github.com/NikitaMigushev/job4j_todo/blob/master/img/4.png" alt="Фильтрация задачи" />
 
-Редактирование задачи
+### Добавление новой задачи
+<image src="https://github.com/NikitaMigushev/job4j_todo/blob/master/img/5.png" alt="Добавление новой задачи" />
+
+### Редактирование задачи
+<image src="https://github.com/NikitaMigushev/job4j_todo/blob/master/img/6.png" alt="Редактирование задачи" />
 
