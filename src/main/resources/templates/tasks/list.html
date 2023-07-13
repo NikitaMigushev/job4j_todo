@@ -17,8 +17,8 @@
     <div class="container">
         <div class="row my-4">
             <div class="col-2"><a href="/tasks">Все задачи</a></div>
-            <div class="col-2"><a th:href="@{/tasks/filterTask/{status}(status=false)}">Только новые</a></div>
-            <div class="col-2"><a th:href="@{/tasks/filterTask/{status}(status=true)}">Только выполненные</a></div>
+            <div class="col-2"><a th:href="@{/tasks/filter/{status}(status=false)}">Только новые</a></div>
+            <div class="col-2"><a th:href="@{/tasks/filter/{status}(status=true)}">Только выполненные</a></div>
         </div>
         <div class="row my-4">
             <table class="table">

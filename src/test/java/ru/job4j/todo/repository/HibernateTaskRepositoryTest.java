@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class HbmTaskRepositoryTest {
+class HibernateTaskRepositoryTest {
     private static SessionFactory sf;
     private static Session session;
 
@@ -41,7 +41,7 @@ class HbmTaskRepositoryTest {
 
             sf = configuration.buildSessionFactory();
             session = sf.openSession();
-        taskRepository = new HbmTaskRepository(sf);
+        taskRepository = new HibernateTaskRepository(sf);
     }
 
     @AfterEach
@@ -134,5 +134,18 @@ class HbmTaskRepositoryTest {
         assertThat(isDeleted).isTrue();
         Optional<Task> deletedTask = taskRepository.findById(task.getId());
         assertThat(deletedTask).isEmpty();
+    }
+
+    @Test
+    public void whenMarkDoneThenSuccess() {
+        Task task = new Task();
+        task.setId(1);
+        task.setName("TestNotDone");
+        task.setDescription("Test");
+        taskRepository.save(task);
+        boolean markDone = taskRepository.markDone(task);
+        Optional<Task> updatedTaskOptional = taskRepository.findById(task.getId());
+        assertThat(updatedTaskOptional).isPresent();
+        assertThat(updatedTaskOptional.get().isDone()).isTrue();
     }
 }

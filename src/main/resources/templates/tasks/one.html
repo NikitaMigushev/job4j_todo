@@ -17,7 +17,7 @@
         <h3>Новая задача</h3>
         <div class="row my-4">
             <div class="col-7">
-                <form th:action="@{/tasks/updateTask}" method="post" th:object="${task}">
+                <form th:action="@{/tasks/update}" method="post" th:object="${task}">
                     <input type="hidden" name="id" th:field="*{id}">
                     <input type="hidden" name="id" th:field="*{created}">
                     <input type="hidden" name="id" th:field="*{done}">
@@ -30,8 +30,8 @@
                     <div class="row my-4">
                         <div class="col-3"><button class="btn btn-primary w-100" type="submit">Обновить задачу</button></div>
                         <div class="col-3"><a class="btn btn-success w-100" th:href="@{/tasks/markFinished/{id}(id=${task.id})}">Задача выполнена</a></div>
-                        <div class="col-3"><a class="btn btn-danger w-100" th:href="@{/tasks/deleteTask/{id}(id=${task.id})}">Удалить задачу</a></div>
-                        <div class="col-3"><a class="btn btn-secondary w-100" th:href="@{/tasks/taskList}">Отмена</a></div>
+                        <div class="col-3"><a class="btn btn-danger w-100" th:href="@{/tasks/delete/{id}(id=${task.id})}">Удалить задачу</a></div>
+                        <div class="col-3"><a class="btn btn-secondary w-100" th:href="@{/tasks/list}">Отмена</a></div>
                     </div>
                 </form>
             </div>

@@ -14,11 +14,11 @@ import java.util.Optional;
 
 @Repository
 @Component
-public class HbmTaskRepository implements TaskRepository {
+public class HibernateTaskRepository implements TaskRepository {
     private final SessionFactory sf;
 
     @Autowired
-    public HbmTaskRepository(SessionFactory sf) {
+    public HibernateTaskRepository(SessionFactory sf) {
         this.sf = sf;
     }
 
@@ -110,6 +110,23 @@ public class HbmTaskRepository implements TaskRepository {
             int result = query.executeUpdate();
             session.getTransaction().commit();
             return result > 0;
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public boolean markDone(Task task) {
+        Session session = sf.openSession();
+        try {
+            session.beginTransaction();
+            task.setDone(true);
+            session.update(task);
+            session.getTransaction().commit();
+            return true;
         } catch (Exception e) {
             session.getTransaction().rollback();
             throw e;

@@ -12,4 +12,5 @@ public interface TaskRepository {
     Collection<Task> findAll();
     Collection<Task> findByStatus(boolean status);
     boolean deleteById(int id);
+    boolean markDone(Task task);
 }

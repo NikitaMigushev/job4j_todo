@@ -13,11 +13,11 @@ import java.util.Optional;
 
 @Repository
 @Component
-public class HbmUserRepository implements UserRepository {
+public class HibernateUserRepository implements UserRepository {
     private final SessionFactory sf;
 
     @Autowired
-    public HbmUserRepository(SessionFactory sf) {
+    public HibernateUserRepository(SessionFactory sf) {
         this.sf = sf;
     }
 
@@ -31,7 +31,7 @@ public class HbmUserRepository implements UserRepository {
             return Optional.of(user);
         } catch (Exception e) {
             session.getTransaction().rollback();
-            throw e;
+            return Optional.empty();
         } finally {
             session.close();
         }
@@ -62,8 +62,7 @@ public class HbmUserRepository implements UserRepository {
             Query<User> query = session.createQuery(hql, User.class);
             query.setParameter("email", email);
             query.setParameter("password", password);
-            User user = query.uniqueResult();
-            return Optional.ofNullable(user);
+            return query.uniqueResultOptional();
         } catch (Exception e) {
             session.getTransaction().rollback();
             throw e;

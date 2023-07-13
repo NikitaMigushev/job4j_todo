@@ -57,14 +57,14 @@ class TaskControllerTest {
         String viewName = taskController.getTaskList(model);
         verify(taskService, times(1)).findAll();
         verify(model, times(1)).addAttribute("tasks", tasks);
-        assertEquals("tasks/taskList", viewName);
+        assertEquals("tasks/list", viewName);
     }
 
     @Test
     public void testGetCreateTaskPage() {
         model = new ConcurrentModel();
         var view = taskController.getCreationPage(model);
-        assertThat(view).isEqualTo("tasks/createTask");
+        assertThat(view).isEqualTo("tasks/create");
     }
 
     @Test
@@ -79,7 +79,7 @@ class TaskControllerTest {
         var view = taskController.getById(model, task1.getId());
         var expectedTask = model.getAttribute("task");
         assertThat(expectedTask).isEqualTo(task1);
-        assertThat(view).isEqualTo("tasks/viewTask");
+        assertThat(view).isEqualTo("tasks/one");
     }
 
     @Test
@@ -150,10 +150,6 @@ class TaskControllerTest {
         var model = new ConcurrentModel();
         var view = taskController.filterTask(true, model);
         assertThat(model.getAttribute("tasks")).isEqualTo(newTasks);
-        assertThat(view).isEqualTo("tasks/taskList");
+        assertThat(view).isEqualTo("tasks/list");
     }
-
-
-
-
 }

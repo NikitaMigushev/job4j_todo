@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class HbmUserRepositoryTest {
+class HibernateUserRepositoryTest {
 
     private static SessionFactory sf;
     private static Session session;
@@ -41,7 +41,7 @@ class HbmUserRepositoryTest {
 
         sf = configuration.buildSessionFactory();
         session = sf.openSession();
-        userRepository = new HbmUserRepository(sf);
+        userRepository = new HibernateUserRepository(sf);
     }
 
     @AfterEach

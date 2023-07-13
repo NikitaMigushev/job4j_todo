@@ -47,8 +47,6 @@ public class SimpleTaskService implements TaskService {
 
     @Override
     public boolean markDone(Task task) {
-        var updatedTask = task;
-        updatedTask.setDone(true);
-        return taskRepository.update(updatedTask);
+        return taskRepository.markDone(task);
     }
 }
