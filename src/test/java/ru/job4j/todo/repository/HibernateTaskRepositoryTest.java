@@ -14,7 +14,6 @@ import ru.job4j.todo.model.Task;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,20 +25,15 @@ class HibernateTaskRepositoryTest {
     private static TaskRepository taskRepository;
 
     @BeforeAll
-        public static void setup() throws Exception  {
+    public static void setup() throws Exception {
         Configuration configuration = new Configuration();
         configuration.configure("hibernate.cfg.xml");
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
         sf = configuration.buildSessionFactory(serviceRegistry);
-        var properties = new Properties();
-        try (var inputStream = HibernateTaskRepositoryTest.class.getClassLoader().getResourceAsStream("application-test.properties")) {
-            properties.load(inputStream);
-        }
-
-            sf = configuration.buildSessionFactory();
-            session = sf.openSession();
+        sf = configuration.buildSessionFactory();
+        session = sf.openSession();
         taskRepository = new HibernateTaskRepository(new CrudRepository(sf));
     }
 

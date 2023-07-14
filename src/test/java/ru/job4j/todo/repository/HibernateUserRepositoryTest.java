@@ -13,7 +13,6 @@ import ru.job4j.todo.model.User;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,21 +25,16 @@ class HibernateUserRepositoryTest {
     private static UserRepository userRepository;
 
     @BeforeAll
-    public static void setup() throws Exception  {
+    public static void setup() throws Exception {
         Configuration configuration = new Configuration();
         configuration.configure("hibernate.cfg.xml");
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
         sf = configuration.buildSessionFactory(serviceRegistry);
-        var properties = new Properties();
-        try (var inputStream = HibernateTaskRepositoryTest.class.getClassLoader().getResourceAsStream("application-test.properties")) {
-            properties.load(inputStream);
-        }
-
         sf = configuration.buildSessionFactory();
         session = sf.openSession();
-         userRepository = new HibernateUserRepository(new CrudRepository(sf));
+        userRepository = new HibernateUserRepository(new CrudRepository(sf));
     }
 
     @AfterEach
