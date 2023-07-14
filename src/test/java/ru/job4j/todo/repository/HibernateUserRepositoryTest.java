@@ -14,6 +14,7 @@ import ru.job4j.todo.model.User;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,15 +28,27 @@ class HibernateUserRepositoryTest {
     private static UserRepository userRepository;
 
     @BeforeAll
-    public static void setup() {
+    public static void setup() throws Exception  {
+        var properties = new Properties();
+        try (var inputStream = HibernateTaskRepositoryTest.class.getClassLoader().getResourceAsStream("application-test.properties")) {
+            properties.load(inputStream);
+        }
+        var driverClass = properties.getProperty("datasource.driverClassName");
+        var url = properties.getProperty("datasource.url");
+        var userName = properties.getProperty("datasource.username");
+        var password = properties.getProperty("datasource.password");
+        var dialect = properties.getProperty("jpa.database-platform");
+        var hbm2ddl = properties.getProperty("jpa.hibernate.ddl-auto");
+        var show_sql = properties.getProperty("jpa.show-sql");
+
         Configuration configuration = new Configuration()
-                .setProperty("hibernate.connection.driver_class", "org.h2.Driver")
-                .setProperty("hibernate.connection.url", "jdbc:h2:./testdb;MODE=PostgreSQL;CASE_INSENSITIVE_IDENTIFIERS=TRUE")
-                .setProperty("hibernate.connection.username", "")
-                .setProperty("hibernate.connection.password", "")
-                .setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
-                .setProperty("hibernate.hbm2ddl.auto", "create-drop")
-                .setProperty("hibernate.show_sql", "true")
+                .setProperty("hibernate.connection.driver_class", driverClass)
+                .setProperty("hibernate.connection.url", url)
+                .setProperty("hibernate.connection.username", userName)
+                .setProperty("hibernate.connection.password", password)
+                .setProperty("hibernate.dialect", dialect)
+                .setProperty("hibernate.hbm2ddl.auto", hbm2ddl)
+                .setProperty("hibernate.show_sql", show_sql)
                 .addAnnotatedClass(Task.class)
                 .addAnnotatedClass(User.class);
 
