@@ -22,10 +22,8 @@ import static org.mockito.Mockito.*;
 class TaskControllerTest {
     @Mock
     private TaskService taskService;
-
     @Mock
     private Model model;
-
     @InjectMocks
     private TaskController taskController;
 
