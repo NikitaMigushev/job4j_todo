@@ -41,7 +41,7 @@ class HibernateTaskRepositoryTest {
 
             sf = configuration.buildSessionFactory();
             session = sf.openSession();
-        taskRepository = new HibernateTaskRepository(sf);
+        taskRepository = new HibernateTaskRepository(new CrudRepository(sf));
     }
 
     @AfterEach

@@ -41,7 +41,7 @@ class HibernateUserRepositoryTest {
 
         sf = configuration.buildSessionFactory();
         session = sf.openSession();
-        userRepository = new HibernateUserRepository(sf);
+        userRepository = new HibernateUserRepository(new CrudRepository(sf));
     }
 
     @AfterEach

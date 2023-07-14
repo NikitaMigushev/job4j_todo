@@ -1,105 +1,49 @@
 package ru.job4j.todo.repository;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.User;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
 @Component
 public class HibernateUserRepository implements UserRepository {
-    private final SessionFactory sf;
+    private final CrudRepository crudRepository;
 
-    @Autowired
-    public HibernateUserRepository(SessionFactory sf) {
-        this.sf = sf;
+    public HibernateUserRepository(CrudRepository crudRepository) {
+        this.crudRepository = crudRepository;
     }
 
     @Override
     public Optional<User> save(User user) {
-        Session session = sf.openSession();
-        try {
-            session.beginTransaction();
-            session.save(user);
-            session.getTransaction().commit();
-            return Optional.of(user);
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            return Optional.empty();
-        } finally {
-            session.close();
-        }
+        crudRepository.run(session -> session.save(user));
+        return Optional.of(user);
     }
 
     @Override
     public Optional<User> findById(int id) {
-        Session session = sf.openSession();
-        try {
-            User user = session.get(User.class, id);
-            if (user != null) {
-                return Optional.of(user);
-            }
-            return Optional.empty();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        } finally {
-            session.close();
-        }
+        return crudRepository.optional("FROM User WHERE id = :userId", User.class,
+                Map.of("userId", id));
     }
 
     @Override
     public Optional<User> findByEmailAndPassword(String email, String password) {
-        Session session = sf.openSession();
-        try {
-            String hql = "FROM User WHERE email = :email AND password = :password";
-            Query<User> query = session.createQuery(hql, User.class);
-            query.setParameter("email", email);
-            query.setParameter("password", password);
-            return query.uniqueResultOptional();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        } finally {
-            session.close();
-        }
+        return crudRepository.optional("FROM User WHERE email = :email AND password = :password",
+                User.class, Map.of("email", email, "password", password));
     }
 
     @Override
     public boolean deleteById(int id) {
-        Session session = sf.openSession();
-        try {
-            session.beginTransaction();
-            Query<User> query = session.createQuery("DELETE FROM User WHERE id = :userId");
-            query.setParameter("userId", id);
-            int result = query.executeUpdate();
-            session.getTransaction().commit();
-            return result > 0;
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        } finally {
-            session.close();
-        }
+        crudRepository.run("DELETE FROM User WHERE id = :userId",
+                Map.of("userId", id));
+        return true;
     }
 
     @Override
     public Collection<User> findAll() {
-        Session session = sf.openSession();
-        try {
-            String hql = "FROM User";
-            Query<User> query = session.createQuery(hql, User.class);
-            return query.list();
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            session.close();
-        }
+        return crudRepository.query("FROM User", User.class);
     }
 }
