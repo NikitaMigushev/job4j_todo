@@ -39,7 +39,7 @@ class HibernateUserRepositoryTest {
         var password = properties.getProperty("datasource.password");
         var dialect = properties.getProperty("jpa.database-platform");
         var hbm2ddl = properties.getProperty("jpa.hibernate.ddl-auto");
-        var show_sql = properties.getProperty("jpa.show-sql");
+        var showSql = properties.getProperty("jpa.show-sql");
 
         Configuration configuration = new Configuration()
                 .setProperty("hibernate.connection.driver_class", driverClass)
@@ -48,7 +48,7 @@ class HibernateUserRepositoryTest {
                 .setProperty("hibernate.connection.password", password)
                 .setProperty("hibernate.dialect", dialect)
                 .setProperty("hibernate.hbm2ddl.auto", hbm2ddl)
-                .setProperty("hibernate.show_sql", show_sql)
+                .setProperty("hibernate.show_sql", showSql)
                 .addAnnotatedClass(Task.class)
                 .addAnnotatedClass(User.class);
 
