@@ -123,7 +123,7 @@ class TaskControllerTest {
         when(taskService.findById(task1.getId())).thenReturn(Optional.of(task1));
         when(taskService.markDone(task1)).thenReturn(true);
         var model = new ConcurrentModel();
-        var view = taskController.markFinished(task1.getId(), model);
+        var view = taskController.markFinished(task1, model);
         assertThat(view).isEqualTo("redirect:/tasks");
 
     }

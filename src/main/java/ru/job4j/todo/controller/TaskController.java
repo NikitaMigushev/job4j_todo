@@ -64,13 +64,8 @@ public class TaskController {
     }
 
     @GetMapping("/markFinished/{id}")
-    public String markFinished(@PathVariable int id, Model model) {
-        var taskOptional = taskService.findById(id);
-        if (taskOptional.isEmpty()) {
-            model.addAttribute("message", "Задача с указанным идентификатором не найден");
-            return "errors/404";
-        }
-        taskService.markDone(taskOptional.get());
+    public String markFinished(@ModelAttribute Task task, Model model)  {
+        taskService.markDone(task);
         return "redirect:/tasks";
     }
 

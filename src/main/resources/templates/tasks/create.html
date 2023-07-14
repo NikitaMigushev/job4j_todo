@@ -17,7 +17,7 @@
         <h3>Новая задача</h3>
         <div class="row my-4">
             <div class="col-5">
-                <form th:action="@{/tasks/createTask}" method="post">
+                <form th:action="@{/tasks/create}" method="post">
                     <label for="taskName" class="form-label"><b>Название задачи</b></label>
                     <input type="text" class="form-control" id="taskName" name="name" placeholder="Название задачи" required />
                     <label for="deadline" class="form-label"><b>Срок</b></label>
