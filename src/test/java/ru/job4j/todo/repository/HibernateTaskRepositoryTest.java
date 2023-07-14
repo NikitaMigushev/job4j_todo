@@ -2,15 +2,14 @@ package ru.job4j.todo.repository;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.job4j.todo.model.Task;
-import ru.job4j.todo.model.User;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -19,38 +18,27 @@ import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 class HibernateTaskRepositoryTest {
-    private static SessionFactory sf;
     private static Session session;
+    private static SessionFactory sf;
 
     private static TaskRepository taskRepository;
 
     @BeforeAll
         public static void setup() throws Exception  {
+        Configuration configuration = new Configuration();
+        configuration.configure("hibernate.cfg.xml");
+
+        // Build the session factory
+        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                .applySettings(configuration.getProperties())
+                .build();
+        sf = configuration.buildSessionFactory(serviceRegistry);
         var properties = new Properties();
         try (var inputStream = HibernateTaskRepositoryTest.class.getClassLoader().getResourceAsStream("application-test.properties")) {
             properties.load(inputStream);
         }
-        var driverClass = properties.getProperty("datasource.driverClassName");
-        var url = properties.getProperty("datasource.url");
-        var userName = properties.getProperty("datasource.username");
-        var password = properties.getProperty("datasource.password");
-        var dialect = properties.getProperty("jpa.database-platform");
-        var hbm2ddl = properties.getProperty("jpa.hibernate.ddl-auto");
-        var showSql = properties.getProperty("jpa.show-sql");
-
-            Configuration configuration = new Configuration()
-                    .setProperty("hibernate.connection.driver_class", driverClass)
-                    .setProperty("hibernate.connection.url", url)
-                    .setProperty("hibernate.connection.username", userName)
-                    .setProperty("hibernate.connection.password", password)
-                    .setProperty("hibernate.dialect", dialect)
-                    .setProperty("hibernate.hbm2ddl.auto", hbm2ddl)
-                    .setProperty("hibernate.show_sql", showSql)
-                    .addAnnotatedClass(Task.class)
-                    .addAnnotatedClass(User.class);
 
             sf = configuration.buildSessionFactory();
             session = sf.openSession();
