@@ -29,8 +29,6 @@ class HibernateUserRepositoryTest {
     public static void setup() throws Exception  {
         Configuration configuration = new Configuration();
         configuration.configure("hibernate.cfg.xml");
-
-        // Build the session factory
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties())
                 .build();
