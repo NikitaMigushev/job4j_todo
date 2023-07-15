@@ -28,4 +28,7 @@ public class Task {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
     private boolean done;
+    @ManyToOne
+    @JoinColumn(name = "todo_user")
+    private User user;
 }

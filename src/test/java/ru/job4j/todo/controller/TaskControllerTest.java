@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
 
 import java.time.LocalDate;
@@ -37,18 +38,19 @@ class TaskControllerTest {
     @Test
     public void testGetTaskListPage() {
         List<Task> tasks = new ArrayList<>();
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
         Task task1 = new Task(1,
                 "Task1",
                 "Task1 description",
                 LocalDateTime.now(),
                 LocalDate.now(),
-                false);
+                false, user);
         Task task2 = new Task(2,
                 "Task2",
                 "Task2 description",
                 LocalDateTime.now(),
                 LocalDate.now(),
-                false);
+                false, user);
         tasks.add(task1);
         tasks.add(task2);
         when(taskService.findAll()).thenReturn(tasks);
@@ -67,11 +69,12 @@ class TaskControllerTest {
 
     @Test
     public void testGetViewTaskPage() {
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
         Task task1 = new Task(1,
                 "Task1",
                 "Task1 description",
                 LocalDateTime.now(), LocalDate.now(),
-                false);
+                false, user);
         when(taskService.findById(task1.getId())).thenReturn(Optional.of(task1));
         var model = new ConcurrentModel();
         var view = taskController.getById(model, task1.getId());
@@ -82,16 +85,17 @@ class TaskControllerTest {
 
     @Test
     public void testUpdateTask() {
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
         Task task1 = new Task(1,
                 "Task1",
                 "Task1 description",
                 LocalDateTime.now(), LocalDate.now(),
-                false);
+                false, user);
         Task task2 = new Task(1,
                 "Task2",
                 "Task2 description",
                 LocalDateTime.now(), LocalDate.now(),
-                false);
+                false, user);
         when(taskService.update(task2)).thenReturn(true);
         var model = new ConcurrentModel();
         var view = taskController.update(task2, model);
@@ -100,11 +104,12 @@ class TaskControllerTest {
 
     @Test
     public void testDeleteTask() {
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
         Task task1 = new Task(1,
                 "Task1",
                 "Task1 description",
                 LocalDateTime.now(), LocalDate.now(),
-                false);
+                false, user);
         when(taskService.deleteById(task1.getId())).thenReturn(true);
         var model = new ConcurrentModel();
         var view = taskController.delete(task1.getId(), model);
@@ -113,11 +118,12 @@ class TaskControllerTest {
 
     @Test
     public void testMarkFinished() {
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
         Task task1 = new Task(1,
                 "Task1",
                 "Task1 description",
                 LocalDateTime.now(), LocalDate.now(),
-                false);
+                false, user);
         when(taskService.findById(task1.getId())).thenReturn(Optional.of(task1));
         when(taskService.markDone(task1)).thenReturn(true);
         var model = new ConcurrentModel();
@@ -128,6 +134,7 @@ class TaskControllerTest {
 
     @Test
     public void testFilterTaskList() {
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
         List<Task> newTasks = new ArrayList<>();
         List<Task> doneTasks = new ArrayList<>();
         Task task1 = new Task(1,
@@ -135,13 +142,13 @@ class TaskControllerTest {
                 "Task1 description",
                 LocalDateTime.now(),
                 LocalDate.now(),
-                false);
+                false, user);
         Task task2 = new Task(2,
                 "Task2",
                 "Task2 description",
                 LocalDateTime.now(),
                 LocalDate.now(),
-                false);
+                false, user);
         newTasks.add(task1);
         doneTasks.add(task2);
         when(taskService.findByStatus(true)).thenReturn(newTasks);

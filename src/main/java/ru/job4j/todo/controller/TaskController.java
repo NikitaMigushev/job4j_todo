@@ -4,7 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/tasks")
@@ -27,7 +30,9 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String create(Model model, @ModelAttribute Task task) {
+    public String create(Model model, @ModelAttribute Task task, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        task.setUser(user);
         taskService.save(task);
         return "redirect:/tasks/list";
     }
@@ -63,9 +68,13 @@ public class TaskController {
         return "redirect:/tasks";
     }
 
-    @GetMapping("/markFinished/{id}")
+    @PostMapping("/markFinished")
     public String markFinished(@ModelAttribute Task task, Model model)  {
-        taskService.markDone(task);
+        var isDone = taskService.markDone(task);
+        if (!isDone) {
+            model.addAttribute("message", "Задача с указанным идентификатором не найдена");
+            return "errors/404";
+        }
         return "redirect:/tasks";
     }
 

@@ -29,7 +29,7 @@
                     <th scope="col">Название</th>
                     <th scope="col">Срок</th>
                     <th scope="col">Статус</th>
-
+                    <th scope="col">Исполнитель</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,6 +39,7 @@
                     <td><a th:text="${task.name}" th:href="@{/tasks/{taskId}(taskId=${task.id})}"</a></td>
                     <td th:text="${#temporals.format(task.deadline, 'dd.MM.yy')}" />
                     <td th:text="${task.done} ? 'Выполнено' : 'Новая'" />
+                    <td th:text="${task.user.fullName}" />
                 </tr>
                 </tbody>
             </table>

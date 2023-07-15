@@ -26,6 +26,7 @@
                     <input type="hidden" name="id" th:field="*{id}">
                     <input type="hidden" name="id" th:field="*{created}">
                     <input type="hidden" name="id" th:field="*{done}">
+                    <input type="hidden" name="user.id" th:value="${task.user.id}">
                     <label for="taskName" class="form-label"><b>Название задачи</b></label>
                     <input type="text" class="form-control" id="taskName" name="name" th:field="*{name}"
                            placeholder="Название задачи" required/>
@@ -40,19 +41,20 @@
                             <button class="btn btn-primary w-100" type="submit">Обновить задачу</button>
                         </div>
                         <div class="col-3">
-                            <form th:action="@{/tasks/markFinished}" method="post" th:object="${task}">
-                                <button class="btn btn-success w-100" type="submit">Задача выполнена</button>
-                            </form>
+                            <button class="btn btn-success w-100" type="submit" th:formaction="@{/tasks/markFinished}">Задача выполнена</button>
                         </div>
-                        <div class="col-3"><a class="btn btn-danger w-100"
-                                              th:href="@{/tasks/delete/{id}(id=${task.id})}">Удалить задачу</a></div>
+                        <div class="col-3">
+                            <a class="btn btn-danger w-100" th:href="@{/tasks/delete/{id}(id=${task.id})}">Удалить задачу</a>
+                        </div>
                         <div class="col-3"><a class="btn btn-secondary w-100" th:href="@{/tasks/list}">Отмена</a></div>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
     <footer class="text-center text-lg-start fixed-bottom" th:insert="blocks/footer :: footer"></footer>
 </div>
 </body>
+
 </html>
