@@ -6,8 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import java.time.LocalDate;
@@ -23,6 +25,9 @@ import static org.mockito.Mockito.*;
 class TaskControllerTest {
     @Mock
     private TaskService taskService;
+
+    @Mock
+    private PriorityService priorityService;
     @Mock
     private Model model;
     @InjectMocks
@@ -31,8 +36,9 @@ class TaskControllerTest {
     @BeforeEach
     public void initService() {
         taskService = mock(TaskService.class);
+        priorityService = mock(PriorityService.class);
         model = mock(Model.class);
-        taskController = new TaskController(taskService);
+        taskController = new TaskController(taskService, priorityService);
     }
 
     @Test
@@ -44,13 +50,13 @@ class TaskControllerTest {
                 "Task1 description",
                 LocalDateTime.now(),
                 LocalDate.now(),
-                false, user);
+                false, user, new Priority(1, "p1", 1));
         Task task2 = new Task(2,
                 "Task2",
                 "Task2 description",
                 LocalDateTime.now(),
                 LocalDate.now(),
-                false, user);
+                false, user, new Priority(1, "p1", 1));
         tasks.add(task1);
         tasks.add(task2);
         when(taskService.findAll()).thenReturn(tasks);
@@ -74,7 +80,7 @@ class TaskControllerTest {
                 "Task1",
                 "Task1 description",
                 LocalDateTime.now(), LocalDate.now(),
-                false, user);
+                false, user, new Priority(1, "p1", 1));
         when(taskService.findById(task1.getId())).thenReturn(Optional.of(task1));
         var model = new ConcurrentModel();
         var view = taskController.getById(model, task1.getId());
@@ -90,12 +96,12 @@ class TaskControllerTest {
                 "Task1",
                 "Task1 description",
                 LocalDateTime.now(), LocalDate.now(),
-                false, user);
+                false, user, new Priority(1, "p1", 1));
         Task task2 = new Task(1,
                 "Task2",
                 "Task2 description",
                 LocalDateTime.now(), LocalDate.now(),
-                false, user);
+                false, user, new Priority(1, "p1", 1));
         when(taskService.update(task2)).thenReturn(true);
         var model = new ConcurrentModel();
         var view = taskController.update(task2, model);
@@ -109,7 +115,7 @@ class TaskControllerTest {
                 "Task1",
                 "Task1 description",
                 LocalDateTime.now(), LocalDate.now(),
-                false, user);
+                false, user, new Priority(1, "p1", 1));
         when(taskService.deleteById(task1.getId())).thenReturn(true);
         var model = new ConcurrentModel();
         var view = taskController.delete(task1.getId(), model);
@@ -123,7 +129,7 @@ class TaskControllerTest {
                 "Task1",
                 "Task1 description",
                 LocalDateTime.now(), LocalDate.now(),
-                false, user);
+                false, user, new Priority(1, "p1", 1));
         when(taskService.findById(task1.getId())).thenReturn(Optional.of(task1));
         when(taskService.markDone(task1)).thenReturn(true);
         var model = new ConcurrentModel();
@@ -142,13 +148,13 @@ class TaskControllerTest {
                 "Task1 description",
                 LocalDateTime.now(),
                 LocalDate.now(),
-                false, user);
+                false, user, new Priority(1, "p1", 1));
         Task task2 = new Task(2,
                 "Task2",
                 "Task2 description",
                 LocalDateTime.now(),
                 LocalDate.now(),
-                false, user);
+                false, user, new Priority(1, "p1", 1));
         newTasks.add(task1);
         doneTasks.add(task2);
         when(taskService.findByStatus(true)).thenReturn(newTasks);

@@ -33,6 +33,13 @@
                     <label for="deadline" class="form-label"><b>Срок</b></label>
                     <input type="date" class="form-control" id="deadline" name="deadline" th:field="*{deadline}"
                            placeholder="Срок" required>
+                    <label for="priority" class="form-label"><b>Приоритет</b></label>
+                    <select class="form-select" id="priority" name="priority.id">
+                        <option th:each="priority : ${priorities}"
+                                th:value="${priority.id}"
+                                th:text="${priority.name}"
+                                th:selected="${priority.id == task.priority.id}"></option>
+                    </select>
                     <label for="description" class="form-label"><b>Описание задачи</b></label>
                     <textarea type="text" class="form-control" id="description" name="description" rows="15"
                               th:field="*{description}" placeholder="Описание задачи" required></textarea>

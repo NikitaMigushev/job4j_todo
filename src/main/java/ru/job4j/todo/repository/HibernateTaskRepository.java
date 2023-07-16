@@ -41,7 +41,8 @@ public class HibernateTaskRepository implements TaskRepository {
     public Optional<Task> findById(int id) {
         try {
             return crudRepository.optional(
-                    "from Task where id = :fId", Task.class,
+                    "SELECT t FROM Task t JOIN FETCH t.priority WHERE t.id = :fId",
+                    Task.class,
                     Map.of("fId", id)
             );
         } catch (Exception e) {
@@ -53,7 +54,8 @@ public class HibernateTaskRepository implements TaskRepository {
     public Collection<Task> findAll() {
         try {
             return crudRepository.query(
-                    "from Task", Task.class
+                    "SELECT t FROM Task t JOIN FETCH t.priority",
+                    Task.class
             );
         } catch (Exception e) {
             return Collections.emptyList();
@@ -63,8 +65,11 @@ public class HibernateTaskRepository implements TaskRepository {
     @Override
     public Collection<Task> findByStatus(boolean status) {
         try {
-            return crudRepository.query("FROM Task WHERE done = :status", Task.class,
-                    Map.of("status", status));
+            return crudRepository.query(
+                    "SELECT t FROM Task t JOIN FETCH t.priority WHERE t.done = :status",
+                    Task.class,
+                    Map.of("status", status)
+            );
         } catch (Exception e) {
             return Collections.emptyList();
         }

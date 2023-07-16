@@ -22,6 +22,13 @@
                     <input type="text" class="form-control" id="taskName" name="name" placeholder="Название задачи" required />
                     <label for="deadline" class="form-label"><b>Срок</b></label>
                     <input type="date" class="form-control" id="deadline" name="deadline" placeholder="Срок" required>
+                    <label for="priority"><b>Город</b></label>
+                    <div class="my-3">
+                        <label for="priority" class="form-label"><b>Приоритет</b></label>
+                    <select class="form-control" id="priority" name="priority.id">
+                        <option th:each="priority : ${priorities}" th:value="${priority.id}" th:text="${priority.name}"></option>
+                    </select>
+                    </div>
                     <label for="description" class="form-label"><b>Описание задачи</b></label>
                     <textarea type="text" class="form-control" id="description" name="description" rows="15" placeholder="Описание задачи" required></textarea>
                     <div class="row my-4">
