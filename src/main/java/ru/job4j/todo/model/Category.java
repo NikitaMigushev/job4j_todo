@@ -7,17 +7,17 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "category")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "priorities")
-public class Priority {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private int id;
+    @EqualsAndHashCode.Include
     private String name;
-    private int position;
 }

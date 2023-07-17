@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface PriorityRepository {
     Collection<Priority> findAll();
-    Optional<Priority> save(Priority task);
+    Optional<Priority> save(Priority priority);
 }

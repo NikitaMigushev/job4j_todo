@@ -4,11 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -34,4 +38,12 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "priority_id")
     private Priority priority;
+    @ManyToMany
+    @JoinTable(
+            name = "task_category",
+            joinColumns = { @JoinColumn(name = "task_id") },
+            inverseJoinColumns = { @JoinColumn(name = "category_id") }
+    )
+    @Fetch(FetchMode.JOIN)
+    private List<Category> category = new ArrayList<>();
 }

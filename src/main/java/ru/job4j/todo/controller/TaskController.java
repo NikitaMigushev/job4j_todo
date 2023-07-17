@@ -3,12 +3,15 @@ package ru.job4j.todo.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping("/tasks")
@@ -16,9 +19,12 @@ public class TaskController {
     private final TaskService taskService;
     private final PriorityService priorityService;
 
-    public TaskController(TaskService taskService, PriorityService priorityService) {
+    private final CategoryService categoryService;
+
+    public TaskController(TaskService taskService, PriorityService priorityService, CategoryService categoryService) {
         this.taskService = taskService;
         this.priorityService = priorityService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping({"/list", ""})
@@ -30,13 +36,16 @@ public class TaskController {
     @GetMapping("/create")
     public String getCreationPage(Model model) {
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         return "tasks/create";
     }
 
     @PostMapping("/create")
-    public String create(Model model, @ModelAttribute Task task, HttpSession session) {
+    public String create(Model model, @ModelAttribute Task task, HttpSession session, @RequestParam("categoryIds") List<Integer> categoryIds) {
         User user = (User) session.getAttribute("user");
         task.setUser(user);
+        List<Category> categories = categoryService.findByIds(categoryIds);
+        task.setCategory(categories);
         taskService.save(task);
         return "redirect:/tasks/list";
     }
@@ -44,6 +53,7 @@ public class TaskController {
     @GetMapping("/{id}")
     public String getById(Model model, @PathVariable int id) {
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         var taskOptional = taskService.findById(id);
         if (taskOptional.isEmpty()) {
             model.addAttribute("message", "Задача с указанным идентификатором не найден");
@@ -54,7 +64,9 @@ public class TaskController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Task task, Model model) {
+    public String update(@ModelAttribute Task task, Model model, @RequestParam("categoryIds") List<Integer> categoryIds) {
+        List<Category> categories = categoryService.findByIds(categoryIds);
+        task.setCategory(categories);
         var isUpdated = taskService.update(task);
         if (!isUpdated) {
             model.addAttribute("message", "Задача с указанным идентификатором не найдена");
