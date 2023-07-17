@@ -42,16 +42,11 @@ class HibernatePriorityRepositoryTest {
 
     @Test
     public void testFindAll() {
-        // Prepare test data
         Priority priority1 = new Priority(1, "High", 1);
         Priority priority2 = new Priority(2, "Low", 2);
         priorityRepository.save(priority1);
         priorityRepository.save(priority2);
-
-        // Perform the test
         Collection<Priority> priorities = priorityRepository.findAll();
-
-        // Verify the result
         assertThat(priorities)
                 .extracting(Priority::getName)
                 .containsExactlyInAnyOrder("High", "Low");
