@@ -7,11 +7,15 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -23,6 +27,9 @@ class HibernateTaskRepositoryTest {
     private static SessionFactory sf;
 
     private static TaskRepository taskRepository;
+    private static PriorityRepository priorityRepository;
+    private static UserRepository userRepository;
+    private User user = new User(1, "user", "user@user.ru", "123", LocalDateTime.now());
 
     @BeforeAll
     public static void setup() throws Exception {
@@ -35,6 +42,18 @@ class HibernateTaskRepositoryTest {
         sf = configuration.buildSessionFactory();
         session = sf.openSession();
         taskRepository = new HibernateTaskRepository(new CrudRepository(sf));
+        priorityRepository = new HibernatePriorityRepository(new CrudRepository(sf));
+        userRepository = new HibernateUserRepository(new CrudRepository(sf));
+
+    }
+
+    @BeforeEach
+    public void init() {
+        Priority priority1 = new Priority(1, "urgent", 1);
+        Priority priority2 = new Priority(2, "normal", 2);
+        priorityRepository.save(priority1);
+        priorityRepository.save(priority2);
+        userRepository.save(user);
     }
 
     @AfterEach
@@ -59,39 +78,30 @@ class HibernateTaskRepositoryTest {
 
     @Test
     public void whenFindByIdThenSuccess() {
-        Task task = new Task();
-        task.setName("Test");
-        task.setDescription("Test");
-        task.setDeadline(LocalDate.now());
-        taskRepository.save(task);
-        Optional<Task> foundTask = taskRepository.findById(task.getId());
+        var priority = priorityRepository.findAll();
+        Task task = new Task(1, "Task", "task", LocalDateTime.now(), LocalDate.now(), false, user, priority.iterator().next());
+        var savedTask = taskRepository.save(task);
+        Optional<Task> foundTask = taskRepository.findById(savedTask.get().getId());
         assertThat(foundTask).isPresent();
         assertThat(foundTask.get().getName()).isEqualTo(task.getName());
     }
 
     @Test
     public void whenUpdateThenSuccess() {
-        Task task1 = new Task();
-        task1.setName("Test");
-        task1.setDescription("Test");
-        Task task2 = new Task();
-        task2.setName("Test2");
-        task2.setDescription("Test");
-        Optional<Task> savedTask1 = taskRepository.save(task1);
-        task2.setId(savedTask1.get().getId());
+        var priority = priorityRepository.findAll();
+        Task task1 = new Task(1, "Task1", "task", LocalDateTime.now(), LocalDate.now(), false, user, priority.iterator().next());
+        var savedTask = taskRepository.save(task1);
+        Task task2 = new Task(savedTask.get().getId(), "Task2", "task", LocalDateTime.now(), LocalDate.now(), false, user, priority.iterator().next());
         taskRepository.update(task2);
-        Optional<Task> updatedTask = taskRepository.findById(savedTask1.get().getId());
+        Optional<Task> updatedTask = taskRepository.findById(task2.getId());
         assertThat(updatedTask.get().getName()).isEqualTo(task2.getName());
     }
 
     @Test
     public void whenFindAllThenSuccess() {
-        Task task1 = new Task();
-        task1.setName("Test");
-        task1.setDescription("Test");
-        Task task2 = new Task();
-        task2.setName("Test");
-        task2.setDescription("Test");
+        var priority = priorityRepository.findAll();
+        Task task1 = new Task(1, "Task1", "task", LocalDateTime.now(), LocalDate.now(), false, user, priority.iterator().next());
+        Task task2 = new Task(2, "Task2", "task", LocalDateTime.now(), LocalDate.now(), false, user, priority.iterator().next());
         taskRepository.save(task1);
         taskRepository.save(task2);
         Collection<Task> allTasks = taskRepository.findAll();
@@ -100,21 +110,16 @@ class HibernateTaskRepositoryTest {
 
     @Test
     public void whenFindByStatusSuccess() {
-        Task task1 = new Task();
-        task1.setName("TestNotDone");
-        task1.setDescription("Test");
-        task1.setDone(false);
-        Task task2 = new Task();
-        task2.setName("TestDone");
-        task2.setDescription("Test");
-        task2.setDone(true);
+        var priority = priorityRepository.findAll();
+        Task task1 = new Task(1, "Task1", "task", LocalDateTime.now(), LocalDate.now(), false, user, priority.iterator().next());
+        Task task2 = new Task(2, "Task2", "task", LocalDateTime.now(), LocalDate.now(), true, user, priority.iterator().next());
         taskRepository.save(task1);
         taskRepository.save(task2);
         Collection<Task> doneTasks = taskRepository.findByStatus(true);
         Collection<Task> notDoneTasks = taskRepository.findByStatus(false);
         assertThat(doneTasks).hasSize(1);
-        assertThat(doneTasks.iterator().next().getName()).isEqualTo("TestDone");
-        assertThat(notDoneTasks.iterator().next().getName()).isEqualTo("TestNotDone");
+        assertThat(doneTasks.iterator().next().getName()).isEqualTo("Task2");
+        assertThat(notDoneTasks.iterator().next().getName()).isEqualTo("Task1");
     }
 
     @Test
@@ -131,10 +136,8 @@ class HibernateTaskRepositoryTest {
 
     @Test
     public void whenMarkDoneThenSuccess() {
-        Task task = new Task();
-        task.setId(1);
-        task.setName("TestNotDone");
-        task.setDescription("Test");
+        var priority = priorityRepository.findAll();
+        Task task = new Task(1, "Task1", "task", LocalDateTime.now(), LocalDate.now(), false, user, priority.iterator().next());
         taskRepository.save(task);
         boolean markDone = taskRepository.markDone(task);
         Optional<Task> updatedTaskOptional = taskRepository.findById(task.getId());
