@@ -41,7 +41,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="task: ${tasks}">
-                    <td th:text="${#temporals.format(task.created, 'dd.MM.yy HH:mm')}"/>
+                    <td th:text="${#temporals.format(task.created.atZone(T(java.time.ZoneId).of(user.timezone)), 'dd.MM.yy HH:mm')}"></td>
                     <td th:text="${task.id}"/>
                     <td><a th:text="${task.name}" th:href="@{/tasks/{taskId}(taskId=${task.id})}"</a></td>
                     <td th:text="${#temporals.format(task.deadline, 'dd.MM.yy')}"/>

@@ -29,7 +29,9 @@ public class TaskController {
     }
 
     @GetMapping({"/list", ""})
-    public String getTaskList(Model model) {
+    public String getTaskList(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
         model.addAttribute("tasks", taskService.findAll());
         return "tasks/list";
     }

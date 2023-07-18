@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 @Entity
 @Table(name = "users")
@@ -26,4 +27,5 @@ public class User {
     private String password;
     @Column(name = "creation_date")
     private LocalDateTime creationDate = LocalDateTime.now();
+    private String timezone = TimeZone.getDefault().getID();
 }

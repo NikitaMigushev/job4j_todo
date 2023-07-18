@@ -17,6 +17,7 @@
     <include file="scripts/007.ddl.create_category_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/008.ddl_create_task_category_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/009.dml_insert_into_category_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/010_ddl_add_column_timezone_in_users_table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
 
 

@@ -14,6 +14,7 @@ import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -33,6 +34,10 @@ class TaskControllerTest {
     private CategoryService categoryService;
     @Mock
     private Model model;
+
+    @Mock
+    private HttpSession session;
+
     @InjectMocks
     private TaskController taskController;
     Set<Category> category = new HashSet<>();
@@ -42,6 +47,7 @@ class TaskControllerTest {
         taskService = mock(TaskService.class);
         priorityService = mock(PriorityService.class);
         categoryService = mock(CategoryService.class);
+        session = mock(HttpSession.class);
         model = mock(Model.class);
         taskController = new TaskController(taskService, priorityService, categoryService);
         category.add(new Category(1, "bug"));
@@ -51,7 +57,7 @@ class TaskControllerTest {
     @Test
     public void testGetTaskListPage() {
         List<Task> tasks = new ArrayList<>();
-        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now(), TimeZone.getDefault().getID());
         Task task1 = new Task(1,
                 "Task1",
                 "Task1 description",
@@ -67,7 +73,7 @@ class TaskControllerTest {
         tasks.add(task1);
         tasks.add(task2);
         when(taskService.findAll()).thenReturn(tasks);
-        String viewName = taskController.getTaskList(model);
+        String viewName = taskController.getTaskList(model, session);
         verify(taskService, times(1)).findAll();
         verify(model, times(1)).addAttribute("tasks", tasks);
         assertEquals("tasks/list", viewName);
@@ -82,7 +88,7 @@ class TaskControllerTest {
 
     @Test
     public void testGetViewTaskPage() {
-        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now(), TimeZone.getDefault().getID());
         Task task1 = new Task(1,
                 "Task1",
                 "Task1 description",
@@ -98,7 +104,7 @@ class TaskControllerTest {
 
     @Test
     public void testUpdateTask() {
-        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now(), TimeZone.getDefault().getID());
         Task task1 = new Task(1,
                 "Task1",
                 "Task1 description",
@@ -117,7 +123,7 @@ class TaskControllerTest {
 
     @Test
     public void testDeleteTask() {
-        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now(), TimeZone.getDefault().getID());
         Task task1 = new Task(1,
                 "Task1",
                 "Task1 description",
@@ -131,7 +137,7 @@ class TaskControllerTest {
 
     @Test
     public void testMarkFinished() {
-        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now(), TimeZone.getDefault().getID());
         Task task1 = new Task(1,
                 "Task1",
                 "Task1 description",
@@ -147,7 +153,7 @@ class TaskControllerTest {
 
     @Test
     public void testFilterTaskList() {
-        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now());
+        User user = new User(1, "Test", "test@test.ru", "123", LocalDateTime.now(), TimeZone.getDefault().getID());
         List<Task> newTasks = new ArrayList<>();
         List<Task> doneTasks = new ArrayList<>();
         Task task1 = new Task(1,

@@ -32,7 +32,7 @@ class HibernateTaskRepositoryTest {
 
     private static CategoryRepository categoryRepository;
 
-    private static User user = new User(1, "user", "user@user.ru", "123", LocalDateTime.now());
+    private static User user = new User(1, "user", "user@user.ru", "123", LocalDateTime.now(), TimeZone.getDefault().getID());
     private static Set<Category> categories;
 
     @BeforeAll

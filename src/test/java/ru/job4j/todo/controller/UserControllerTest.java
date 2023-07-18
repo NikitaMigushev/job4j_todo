@@ -21,6 +21,9 @@ class UserControllerTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private Model model;
+
     @InjectMocks
     private UserController userController;
 
@@ -28,6 +31,7 @@ class UserControllerTest {
     public void setup() {
         userService = mock(UserService.class);
         userController = new UserController(userService);
+        model = mock(Model.class);
     }
 
     @Test
@@ -80,7 +84,7 @@ class UserControllerTest {
 
     @Test
     void testGetRegistrationPage() {
-        ModelAndView modelAndView = userController.getRegistrationPage();
+        ModelAndView modelAndView = userController.getRegistrationPage(model);
         assertThat(modelAndView.getViewName()).isEqualTo("users/register");
     }
 
