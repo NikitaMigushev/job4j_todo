@@ -12,6 +12,7 @@ import ru.job4j.todo.model.Category;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,7 +60,7 @@ class HibernateCategoryRepositoryTest {
         Category category2 = new Category(2, "Feature");
         categoryRepository.save(category1);
         categoryRepository.save(category2);
-        List<Category> categories = categoryRepository.findByIds(List.of(category1.getId(), category2.getId()));
+        Set<Category> categories = categoryRepository.findByIds(List.of(category1.getId(), category2.getId()));
         assertThat(categories)
                 .extracting(Category::getName)
                 .containsExactlyInAnyOrder("Bug", "Feature");

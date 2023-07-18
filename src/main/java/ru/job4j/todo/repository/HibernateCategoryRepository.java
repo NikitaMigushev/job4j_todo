@@ -5,10 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Category;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @Component
@@ -39,11 +36,9 @@ public class HibernateCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public List<Category> findByIds(List<Integer> ids) {
-        return crudRepository.query(
-                "SELECT c FROM Category c WHERE c.id IN :ids",
+    public Set<Category> findByIds(List<Integer> ids) {
+        return new HashSet<>(crudRepository.query("SELECT c FROM Category c WHERE c.id IN :ids",
                 Category.class,
-                Collections.singletonMap("ids", ids)
-        );
+                Map.of("ids", ids)));
     }
 }

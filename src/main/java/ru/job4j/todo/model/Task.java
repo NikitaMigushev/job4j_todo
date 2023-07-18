@@ -11,8 +11,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
@@ -45,5 +45,5 @@ public class Task {
             inverseJoinColumns = { @JoinColumn(name = "category_id") }
     )
     @Fetch(FetchMode.JOIN)
-    private List<Category> category = new ArrayList<>();
+    private Set<Category> category = new HashSet<>();
 }

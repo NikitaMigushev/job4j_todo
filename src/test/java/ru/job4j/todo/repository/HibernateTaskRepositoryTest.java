@@ -17,10 +17,7 @@ import ru.job4j.todo.model.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +33,7 @@ class HibernateTaskRepositoryTest {
     private static CategoryRepository categoryRepository;
 
     private static User user = new User(1, "user", "user@user.ru", "123", LocalDateTime.now());
-    private static List<Category> categories;
+    private static Set<Category> categories;
 
     @BeforeAll
     public static void setup() throws Exception {
@@ -66,7 +63,7 @@ class HibernateTaskRepositoryTest {
         Category category2 = new Category(2, "Feature");
         categoryRepository.save(category1);
         categoryRepository.save(category2);
-        categories = new ArrayList<>(categoryRepository.findAll());
+        categories = new HashSet<>(categoryRepository.findAll());
     }
 
     @AfterEach

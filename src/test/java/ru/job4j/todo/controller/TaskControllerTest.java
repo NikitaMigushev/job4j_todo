@@ -16,9 +16,7 @@ import ru.job4j.todo.service.TaskService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,7 +35,7 @@ class TaskControllerTest {
     private Model model;
     @InjectMocks
     private TaskController taskController;
-    List<Category> category = new ArrayList<>();
+    Set<Category> category = new HashSet<>();
 
     @BeforeEach
     public void initService() {

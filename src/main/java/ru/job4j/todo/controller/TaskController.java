@@ -12,6 +12,7 @@ import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/tasks")
@@ -44,7 +45,7 @@ public class TaskController {
     public String create(Model model, @ModelAttribute Task task, HttpSession session, @RequestParam("categoryIds") List<Integer> categoryIds) {
         User user = (User) session.getAttribute("user");
         task.setUser(user);
-        List<Category> categories = categoryService.findByIds(categoryIds);
+        Set<Category> categories = categoryService.findByIds(categoryIds);
         task.setCategory(categories);
         taskService.save(task);
         return "redirect:/tasks/list";
@@ -65,7 +66,7 @@ public class TaskController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute Task task, Model model, @RequestParam("categoryIds") List<Integer> categoryIds) {
-        List<Category> categories = categoryService.findByIds(categoryIds);
+        Set<Category> categories = categoryService.findByIds(categoryIds);
         task.setCategory(categories);
         var isUpdated = taskService.update(task);
         if (!isUpdated) {
