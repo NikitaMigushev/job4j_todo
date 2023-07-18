@@ -21,8 +21,9 @@ public class HibernatePriorityRepository implements PriorityRepository {
             crudRepository.run(session -> session.save(priority));
             return Optional.of(priority);
         } catch (Exception e) {
-            return Optional.empty();
+            e.printStackTrace();
         }
+        return Optional.empty();
     }
 
     @Override
@@ -33,7 +34,8 @@ public class HibernatePriorityRepository implements PriorityRepository {
                     Priority.class
             );
         } catch (Exception e) {
-            return Collections.emptyList();
+            e.printStackTrace();
         }
+        return Collections.emptyList();
     }
 }

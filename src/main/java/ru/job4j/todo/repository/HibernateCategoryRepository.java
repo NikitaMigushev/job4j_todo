@@ -19,8 +19,9 @@ public class HibernateCategoryRepository implements CategoryRepository {
             crudRepository.run(session -> session.save(category));
             return Optional.of(category);
         } catch (Exception e) {
-            return Optional.empty();
+            e.printStackTrace();
         }
+        return Optional.empty();
     }
 
     @Override
@@ -31,8 +32,9 @@ public class HibernateCategoryRepository implements CategoryRepository {
                     Category.class
             );
         } catch (Exception e) {
-            return Collections.emptyList();
+            e.printStackTrace();
         }
+        return Collections.emptyList();
     }
 
     @Override

@@ -46,8 +46,9 @@ public class HibernateTaskRepository implements TaskRepository {
                     Map.of("fId", id)
             );
         } catch (Exception e) {
-            return Optional.empty();
+            e.printStackTrace();
         }
+        return Optional.empty();
     }
 
     @Override
@@ -58,8 +59,9 @@ public class HibernateTaskRepository implements TaskRepository {
                     Task.class
             );
         } catch (Exception e) {
-            return Collections.emptyList();
+            e.printStackTrace();
         }
+        return Collections.emptyList();
     }
 
     @Override
@@ -71,8 +73,9 @@ public class HibernateTaskRepository implements TaskRepository {
                     Map.of("status", status)
             );
         } catch (Exception e) {
-            return Collections.emptyList();
+            e.printStackTrace();
         }
+        return Collections.emptyList();
     }
 
     @Override
@@ -84,8 +87,9 @@ public class HibernateTaskRepository implements TaskRepository {
             );
             return true;
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
         }
+        return false;
     }
 
     @Override
@@ -97,7 +101,8 @@ public class HibernateTaskRepository implements TaskRepository {
             );
             return true;
         } catch (Exception e) {
-            return false;
+            e.printStackTrace();
         }
+        return false;
     }
 }
